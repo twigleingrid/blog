@@ -1,19 +1,8 @@
-#!/bin/bash
+#!/bin/sh
+# deploy.sh
+set -e
 
-echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
+sudo apt-get install -y lftp
 
-cd public
-
-if [ -n "$GITHUB_AUTH_SECRET" ]
-then
-    touch ~/.git-credentials
-    chmod 0600 ~/.git-credentials
-    echo $GITHUB_AUTH_SECRET > ~/.git-credentials    
-
-    git config credential.helper store
-    git config user.email "twigleingrid-blog-bot@users.noreply.github.com"
-    git config user.name "twigleingrid-blog-bot"fi
-
-git add .
-git commit -m "Rebuild site"
-git push --force origin HEAD:master
+# deployment via ftp upload. Using FTPS for that
+lftp -c "set ftps:initial-prot ''; set ftp:ssl-force true; set ftp:ssl-protect-data true; open ftp://$FTP_USER:$FTP_PASS@$FTP_HOST:21; mirror -eRv public .; quit;"
