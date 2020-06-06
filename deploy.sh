@@ -2,6 +2,7 @@
 # deploy.sh
 set -e
 
+
 sudo apt-get install -y lftp
 
 # deployment via ftp upload. Using FTPS for that
